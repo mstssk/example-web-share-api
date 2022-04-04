@@ -13,17 +13,12 @@ window.addEventListener("DOMContentLoaded", () => {
             text: description,
             url: location.href,
         })
-            .then(() => {
-            alert("シェアが完了しました！");
-        })
             .catch((reason) => {
             alert(reason);
         });
     });
     const inputTypeFile = document.getElementById("share-file");
-    document
-        .getElementById("share-file-button")
-        ?.addEventListener("click", () => {
+    inputTypeFile.addEventListener("change", () => {
         if (!navigator.share) {
             alert("Web Share APIに対応していません。モバイルブラウザで試してください。");
             return;
@@ -35,20 +30,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         if (!navigator.canShare({ files: [file] })) {
             alert(`「${file.name}」はシェアできません。`);
+            inputTypeFile.value = "";
             return;
         }
         navigator
-            .share({
-            files: [file],
-        })
-            .then(() => {
-            alert("シェアが完了しました！");
-        })
-            .catch((reason) => {
-            alert(reason);
-        })
-            .finally(() => {
-            inputTypeFile.value = "";
-        });
+            .share({ files: [file] })
+            .catch((reason) => alert(reason))
+            .finally(() => (inputTypeFile.value = ""));
     });
 });
