@@ -21,13 +21,16 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
     const inputTypeFile = document.getElementById("share-file");
-    inputTypeFile.addEventListener("change", () => {
+    document
+        .getElementById("share-file-button")
+        ?.addEventListener("click", () => {
         if (!navigator.share) {
             alert("Web Share APIに対応していません。モバイルブラウザで試してください。");
             return;
         }
         const file = inputTypeFile.files?.[0];
         if (!file) {
+            alert("ファイルを選択してください。");
             return;
         }
         if (!navigator.canShare({ files: [file] })) {
@@ -43,6 +46,9 @@ window.addEventListener("DOMContentLoaded", () => {
         })
             .catch((reason) => {
             alert(reason);
+        })
+            .finally(() => {
+            inputTypeFile.value = "";
         });
     });
 });

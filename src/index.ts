@@ -29,34 +29,36 @@ window.addEventListener("DOMContentLoaded", () => {
   const inputTypeFile = document.getElementById(
     "share-file"
   ) as HTMLInputElement;
-  inputTypeFile.addEventListener("change", () => {
-    if (!navigator.share) {
-      alert(
-        "Web Share APIに対応していません。モバイルブラウザで試してください。"
-      );
-      inputTypeFile.value = "";
-      return;
-    }
-    const file = inputTypeFile.files?.[0];
-    if (!file) {
-      return;
-    }
-    if (!navigator.canShare({ files: [file] })) {
-      alert(`「${file.name}」はシェアできません。`);
-      return;
-    }
-    navigator
-      .share({
-        files: [file],
-      })
-      .then(() => {
-        alert("シェアが完了しました！");
-      })
-      .catch((reason) => {
-        alert(reason);
-      })
-      .finally(() => {
-        inputTypeFile.value = "";
-      });
-  });
+  document
+    .getElementById("share-file-button")
+    ?.addEventListener("click", () => {
+      if (!navigator.share) {
+        alert(
+          "Web Share APIに対応していません。モバイルブラウザで試してください。"
+        );
+        return;
+      }
+      const file = inputTypeFile.files?.[0];
+      if (!file) {
+        alert("ファイルを選択してください。");
+        return;
+      }
+      if (!navigator.canShare({ files: [file] })) {
+        alert(`「${file.name}」はシェアできません。`);
+        return;
+      }
+      navigator
+        .share({
+          files: [file],
+        })
+        .then(() => {
+          alert("シェアが完了しました！");
+        })
+        .catch((reason) => {
+          alert(reason);
+        })
+        .finally(() => {
+          inputTypeFile.value = "";
+        });
+    });
 });
